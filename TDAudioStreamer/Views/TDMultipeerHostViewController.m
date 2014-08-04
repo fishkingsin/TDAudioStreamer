@@ -40,8 +40,12 @@
 - (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection
 {
     [self dismissViewControllerAnimated:YES completion:nil];
-
-    if (self.outputStreamer) return;
+    
+    if (self.outputStreamer)
+    {
+        [self.outputStreamer stop];
+        self.outputStreamer = nil;
+    }
 
     self.song = mediaItemCollection.items[0];
 
@@ -66,8 +70,8 @@
 
     NSArray *peers = [self.session connectedPeers];
 
-    if (peers.count) {
-        self.outputStreamer = [[TDAudioOutputStreamer alloc] initWithOutputStream:[self.session outputStreamForPeer:peers[0]]];
+    for(MCPeerID *peer in peers) {
+        self.outputStreamer = [[TDAudioOutputStreamer alloc] initWithOutputStream:[self.session outputStreamForPeer:peer]];
         [self.outputStreamer streamAudioFromURL:[self.song valueForProperty:MPMediaItemPropertyAssetURL]];
         [self.outputStreamer start];
     }
@@ -89,6 +93,7 @@
 {
     MPMediaPickerController *picker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeMusic];
     picker.delegate = self;
+    
     [self presentViewController:picker animated:YES completion:nil];
 }
 
