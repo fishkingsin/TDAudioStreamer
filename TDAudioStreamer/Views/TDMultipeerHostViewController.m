@@ -69,6 +69,19 @@
     [self.session sendData:[NSKeyedArchiver archivedDataWithRootObject:[info copy]]];
 
     NSArray *peers = [self.session connectedPeers];
+    NSURL* assetURL = [self.song valueForProperty:MPMediaItemPropertyAssetURL];
+    NSString *title = [self.song valueForProperty:MPMediaItemPropertyTitle];
+    if (!assetURL) {
+        /*
+         * !!!: When MPMediaItemPropertyAssetURL is nil, it typically means the file
+         * in question is protected by DRM. (old m4p files)
+         */
+        NSString *msg = [NSString stringWithFormat:@"%@ has DRM track will not be played",title];
+        NSLog(@"%@",msg);
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:msg delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+        [alert show];
+        return;
+    }
 
     for(MCPeerID *peer in peers) {
         self.outputStreamer = [[TDAudioOutputStreamer alloc] initWithOutputStream:[self.session outputStreamForPeer:peer]];
