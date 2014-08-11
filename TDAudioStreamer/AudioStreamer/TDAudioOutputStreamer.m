@@ -30,7 +30,7 @@
 
     self.audioStream = [[TDAudioStream alloc] initWithOutputStream:stream];
     self.audioStream.delegate = self;
-    NSLog(@"Init");
+    DDLogVerbose(@"Init");
 
     return self;
 }
@@ -41,7 +41,7 @@
         return [self performSelectorOnMainThread:@selector(start) withObject:nil waitUntilDone:YES];
     }
 
-    NSLog(@"Start");
+    DDLogVerbose(@"Start");
     self.streamThread = [[NSThread alloc] initWithTarget:self selector:@selector(run) object:nil];
     [self.streamThread start];
 }
@@ -52,11 +52,11 @@
         [self.audioStream open];
 
         self.isStreaming = YES;
-        NSLog(@"Loop");
+        DDLogVerbose(@"Loop");
 
         while (self.isStreaming && [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]) ;
 
-        NSLog(@"Done");
+        DDLogVerbose(@"Done");
     }
 }
 
@@ -71,7 +71,7 @@
 
     [self.assetReader addOutput:self.assetOutput];
     [self.assetReader startReading];
-    NSLog(@"Read Asset");
+    DDLogVerbose(@"Read Asset");
 }
 
 - (void)sendDataChunk
@@ -98,7 +98,7 @@
     for (NSUInteger i = 0; i < audioBufferList.mNumberBuffers; i++) {
         AudioBuffer audioBuffer = audioBufferList.mBuffers[i];
         [self.audioStream writeData:audioBuffer.mData maxLength:audioBuffer.mDataByteSize];
-        NSLog(@"buffer size: %u", (unsigned int)audioBuffer.mDataByteSize);
+        DDLogVerbose(@"buffer size: %u", (unsigned int)audioBuffer.mDataByteSize);
     }
 
     CFRelease(blockBuffer);
@@ -114,7 +114,7 @@
 {
     self.isStreaming = NO;
     [self.audioStream close];
-    NSLog(@"Stop");
+    DDLogVerbose(@"Stop");
 }
 
 #pragma mark - TDAudioStreamDelegate
@@ -128,12 +128,12 @@
 
         case TDAudioStreamEventError:
             // TODO: shit!
-            NSLog(@"Stream Error");
+            DDLogVerbose(@"Stream Error");
             break;
 
         case TDAudioStreamEventEnd:
             // TODO: shit!
-            NSLog(@"Stream Ended");
+            DDLogVerbose(@"Stream Ended");
             break;
 
         default:

@@ -14,3 +14,9 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+#import "DDLog.h"
+#import "DDTTYLogger.h"
+#import "DDASLLogger.h"
+// Log levels: off, error, warn, info, verbose
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;

@@ -62,6 +62,7 @@
 
 - (void)session:(TDSession *)session didReceiveAudioStream:(NSInputStream *)stream
 {
+    DDLogVerbose(@"%s",__PRETTY_FUNCTION__);
     if (!self.inputStream) {
         self.inputStream = [[TDAudioInputStreamer alloc] initWithInputStream:stream];
         [self.inputStream start];

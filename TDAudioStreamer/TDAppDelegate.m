@@ -12,6 +12,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [DDLog addLogger:[DDTTYLogger sharedInstance]];
+	[DDLog addLogger:[DDASLLogger sharedInstance]];
     // Override point for customization after application launch.
     return YES;
 }

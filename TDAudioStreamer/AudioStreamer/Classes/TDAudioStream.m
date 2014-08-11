@@ -20,9 +20,9 @@
 {
     self = [super init];
     if (!self) return nil;
-
+    
     self.stream = inputStream;
-
+    
     return self;
 }
 
@@ -30,9 +30,9 @@
 {
     self = [super init];
     if (!self) return nil;
-
+    
     self.stream = outputStream;
-
+    
     return self;
 }
 
@@ -45,23 +45,28 @@
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
 {
+    
     switch (eventCode) {
         case NSStreamEventHasBytesAvailable:
+            DDLogVerbose(@"[self.delegate audioStream:self didRaiseEvent:TDAudioStreamEventHasData];");
             [self.delegate audioStream:self didRaiseEvent:TDAudioStreamEventHasData];
             break;
-
+            
         case NSStreamEventHasSpaceAvailable:
+            DDLogVerbose(@"[self.delegate audioStream:self didRaiseEvent:TDAudioStreamEventWantsData];");
             [self.delegate audioStream:self didRaiseEvent:TDAudioStreamEventWantsData];
             break;
-
+            
         case NSStreamEventEndEncountered:
+            DDLogVerbose(@"[self.delegate audioStream:self didRaiseEvent:TDAudioStreamEventEnd]];");
             [self.delegate audioStream:self didRaiseEvent:TDAudioStreamEventEnd];
             break;
-
+            
         case NSStreamEventErrorOccurred:
+            DDLogVerbose(@"[self.delegate audioStream:self didRaiseEvent:TDAudioStreamEventError];");
             [self.delegate audioStream:self didRaiseEvent:TDAudioStreamEventError];
             break;
-
+            
         default:
             break;
     }

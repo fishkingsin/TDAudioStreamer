@@ -46,11 +46,11 @@
 - (void)session:(MCSession *)session peer:(MCPeerID *)peerID didChangeState:(MCSessionState)state
 {
     if (state == MCSessionStateConnecting) {
-        NSLog(@"Connecting to %@", peerID.displayName);
+        DDLogVerbose(@"Connecting to %@", peerID.displayName);
     } else if (state == MCSessionStateConnected) {
-        NSLog(@"Connected to %@", peerID.displayName);
+        DDLogVerbose(@"Connected to %@", peerID.displayName);
     } else if (state == MCSessionStateNotConnected) {
-        NSLog(@"Disconnected from %@", peerID.displayName);
+        DDLogVerbose(@"Disconnected from %@", peerID.displayName);
     }
 }
 
@@ -61,6 +61,7 @@
 
 - (void)session:(MCSession *)session didReceiveStream:(NSInputStream *)stream withName:(NSString *)streamName fromPeer:(MCPeerID *)peerID
 {
+    DDLogVerbose(@"%s",__PRETTY_FUNCTION__);
     if ([streamName isEqualToString:@"music"]) {
         [self.delegate session:self didReceiveAudioStream:stream];
     }
@@ -87,7 +88,7 @@
     NSOutputStream *stream = [self.session startStreamWithName:@"music" toPeer:peer error:&error];
 
     if (error) {
-        NSLog(@"Error: %@", [error userInfo].description);
+        DDLogVerbose(@"Error: %@", [error userInfo].description);
     }
 
     return stream;
@@ -98,7 +99,7 @@
     NSError *error;
     [self.session sendData:data toPeers:self.session.connectedPeers withMode:MCSessionSendDataReliable error:&error];
     if (error) {
-        NSLog(@"Error: %@", error.userInfo.description);
+        DDLogVerbose(@"Error: %@", error.userInfo.description);
     }
 }
 
